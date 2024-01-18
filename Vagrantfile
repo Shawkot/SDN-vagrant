@@ -96,7 +96,7 @@ Vagrant.configure("2") do |config|
          # Custom CPU & Memory
          vb.customize ["modifyvm", :id, "--memory", "1024"]
 
-         vb.customize ["modifyvm", :id, "--cpus", "1"]
+         vb.customize ["modifyvm", :id, "--cpus", "2"]
 
       end
       #add provisioning scripts to Vagrantfile
