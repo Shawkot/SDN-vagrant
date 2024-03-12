@@ -14,16 +14,14 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "ubuntu/jammy64"
   
-  config.vm.define "raid" do |h|
+  config.vm.define "lxc" do |h|
       h.vm.box = "ubuntu/jammy64"
-      h.vm.hostname="raid"
-      h.vm.network "private_network", ip: "192.168.1.12",virtualbox__intnet: true,virtualbox__intnet:"intneta"
-      #subconfig.vm.network "private_network",ip: "192.168.2.1",virtualbox__intnet: true,virtualbox__intnet:"intnetb"
+      h.vm.hostname="lxc"
+      h.vm.synced_folder ".", "/home/vagrant/sdn"
+      h.vm.network "private_network", ip: "192.168.1.12", virtualbox__intnet:"intneta"
+ 
       h.vm.network "forwarded_port", guest: 22, host: 20003, host_ip: "127.0.0.1"
-      
-      h.vm.disk :disk, size: "5GB", name: "disk1"
-      h.vm.disk :disk, size: "5GB", name: "disk2"
-      h.vm.disk :disk, size: "5GB", name: "disk3"
+      h.vm.network "forwarded_port", guest: 8181, host: 8181
       
       h.vm.provider :virtualbox do |vb|
          # Custom CPU & Memory
@@ -31,7 +29,6 @@ Vagrant.configure("2") do |config|
          vb.customize ["modifyvm", :id, "--cpus", "1"]
       end
       h.vm.provision "shell", inline: <<-SHELL
-      sudo echo "192.168.1.11 lab2" | sudo tee -a /etc/hosts
       sudo apt update
       sudo apt install net-tools
         SHELL
