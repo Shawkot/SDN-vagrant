@@ -1,0 +1,25 @@
+onos link:
+127.0.0.1:8181/onos/ui/index.html
+username: onos
+password: rocks
+
+mininet:
+sudo mn --topo single,10
+sudo mn --controller=remote,ip=127.0.0.1,port=6653 --switch=ovsk,protocols=OpenFlow13
+
+For single topology:
+sudo mn --topo single,3 --controller=remote,ip=127.0.0.1,port=6653 --switch ovs,protocols=OpenFlow13
+
+For linear topology:
+sudo mn --topo=linear,5 --controller=remote,ip=127.0.0.1,port=6653 --switch ovs,protocols=OpenFlow13
+
+Tree topology:
+sudo mn --topo tree,3,2 --controller=remote,ip=127.0.0.1,port=6653 --switch ovs,protocols=OpenFlow13
+
+fanout: each switch is connected to these many childs
+depth : depth of the tree
+
+ref: https://medium.com/@abdulkaderhajjouz/mininet-topology-examples-62ae4c9d8168
+
+
+sudo mn --topo single,3 --controller=remote,ip=127.0.0.1,port=6653

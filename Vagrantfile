@@ -12,10 +12,10 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/jammy64"
+  config.vm.box = "ubuntu/bionic64"
   
   config.vm.define "lxc" do |h|
-      h.vm.box = "ubuntu/jammy64"
+      h.vm.box = "ubuntu/bionic64"
       h.vm.hostname="lxc"
       h.vm.synced_folder ".", "/home/vagrant/sdn"
       h.vm.network "private_network", ip: "192.168.1.12", virtualbox__intnet:"intneta"
