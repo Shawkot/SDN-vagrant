@@ -1,0 +1,82 @@
+onos gui:
+127.0.0.1:8181/onos/ui/index.html 
+
+sudo docker ps #  list active docker containers
+sudo docker ps -a # list all docker containers
+docker stop container_id or name # to stop a docker container
+docker start container_id or name # to start a docker container
+
+# to find the ip address of the docker container 'onos'
+
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' onos
+ssh onos@127.0.0.1 -p 8101
+
+ip netns list
+ip netns delete <ns name>
+sudo ip link add int-A netns netA type veth peer int-B netns netB
+sudo ip link set dev int-A up
+ip link add <p1-name> type veth peer name <p2-name>
+ip link set <p2-name> netns <p2-ns>
+ip addr add 10.0.2.2/24 dev int-a
+
+
+sudo ovs-vsctl show # to display ovs database
+sudo ovs-vsctl del-br br-1 # to delete an ovs bridge
+sudo ovs-vsctl list-br # lists all the ovs bridges
+sudo ovs-vsctl list-ports br-1 # lists all the ports on bridge 'br-1'
+sudo ovs-vsctl set Bridge br0 protocols=OpenFlow13 # sets openflow version 1.3 on bridge 'br0'
+sudo service openvswitch-switch restart # restart the ovs service
+ovs-vsctl set-controller <bridge> tcp:<controller ip>:6653 (port) # connecting an ovs bridge to a controller.
+
+controller ip: 172.17.0.2
+
+
+
+How  to connect two namespaces through an ovs virtual switch:
+
+step 1: create  two namespace first
+
+sudo ip netns add red
+sudo ip netns add blue
+
+step 2: create a ovs bridge (switch)
+
+sudo ovs-vsctl add-br br1
+
+step 3: create a pair of virtual ethernet dev
+
+sudo ip link add red-br0 type veth peer red-br1
+
+step 4: attach one dev to a namespace and the other one to the ovs bridge
+
+sudo ip link set red-br0 netns red
+sudo ovs-vsctl add-port br1 red-br1
+
+step 5: set an ip address to the dev (interface) in the namespace
+
+sudo ip netns exec red ip link set dev red-br0 up
+sudo ip netns exec red ip addr add 10.0.0.2/24 dev red-br0
+
+step 6: up the interface on the bridge or swtich
+sudo ip link set red-br1 up
+
+Now, follow the steps from 3 to 6 for other namespace, for example blue in this case
+
+Step 7: test the connectivity between the namespaces through ovs switch
+sudo ip netns exec red ping 10.0.0.3
+
+LXC:
+sudo lxc-ls --fancy
+sudo lxc-stop -n container_name
+sudo lxc-destroy -n container_name
+sudo lxc-attach -n container_name -- ls
+
+sudo lxc-create -t download -n red -- --keyserver keyserver.ubuntu.com
+
+lxd init
+
+sudo gpasswd -a vagrant lxd
+lxc image list images:
+lxc launch ubuntu:18.04 red
+lxc copy red blue
+
